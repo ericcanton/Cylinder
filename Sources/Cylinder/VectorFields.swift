@@ -9,7 +9,7 @@ import Foundation
 import _Differentiation
 
 protocol VectorField {
-  associatedtype Base: Differentiable
+  associatedtype Base: Peekable
   
   func value(at: Base) -> Base.TangentVector
 }
@@ -19,7 +19,7 @@ struct LogisticAmplitude: VectorField {
   var thetaVelocity: Double
   
   func value(at point: Cylinder) -> Cylinder.TangentVector {
-    Cylinder.TangentVector(dr: point.amplitude * (attractingAmplitude - point.amplitude),
-                           dtheta: thetaVelocity)
+    Cylinder.TangentVector(point.height * (attractingAmplitude - point.height),
+                           thetaVelocity)
   }
 }

@@ -10,7 +10,7 @@ import _Differentiation
 
 struct Circle {
   private var _t: Double
-  @noDerivative private var _circumference: Double
+  @noDerivative private var _length: Double
   
   var theta: Double {
     get {
@@ -18,30 +18,32 @@ struct Circle {
     }
     
     set(newValue) {
-      self._t = newValue.truncatingRemainder(dividingBy: _circumference)
+      self._t = newValue.truncatingRemainder(dividingBy: _length)
     }
   }
   
   var circumference: Double {
     get {
-      _circumference
+      _length
     }
   }
   
-  init(withLength: Double, pointAt: Double) {
-    self._circumference = withLength
-    self._t = pointAt.truncatingRemainder(dividingBy: withLength)
+  init(withLength: Double, withAngle: Double) {
+    self._length = withLength
+    self._t = withAngle.truncatingRemainder(dividingBy: withLength)
   }
 }
 
-extension Circle: Differentiable {
-  mutating func move(by offset: Double) {
-    _t = _t.truncatingRemainder(dividingBy: _circumference)
+extension Circle: Peekable {
+  typealias TangentVector = Double
+  
+  mutating func move(by vector: Self.TangentVector) {
+    theta += vector
   }
 }
 
 extension Circle: CustomStringConvertible {
   @noDerivative var description: String {
-    return "\(_t/_circumference )"
+    return "\(_t/_length )"
   }
 }

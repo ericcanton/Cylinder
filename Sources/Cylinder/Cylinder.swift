@@ -8,23 +8,22 @@
 import Foundation
 import _Differentiation
 
-struct Cylinder: Differentiable {
-  var amplitude: Double
+struct Cylinder: Peekable {
+  
+  typealias TangentVector = SIMD2<Double>
+  
+  var height: Double
   var rotation: Circle
   
-  struct TangentVector: Differentiable & AdditiveArithmetic {
-    var dr, dtheta: Double
-  }
-  
-  mutating func move(by: Self.TangentVector) {
-    amplitude += by.dr
-    rotation.theta += by.dtheta
+  mutating func move(by vector: TangentVector) {
+    height += vector.x
+    rotation.move(by: vector.y)
   }
 }
 
 extension Cylinder: CustomStringConvertible {
   @noDerivative var description: String {
-    var string = "Point at\n  amplitude: \(amplitude)\n  rotation: \(rotation)\n"
+    var string = "Point at\n  height: \(height)\n  angle: \(rotation)\n"
     string += "on a Cylinder of circumference \(rotation.circumference)."
     return string
   }
